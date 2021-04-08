@@ -18,7 +18,7 @@ public class Stock {
     private Set<String> photos;
     private Condition conditions;
 
-    Stock() {
+    public Stock() {
         stockId = 0;
         name = "";
         price = 0.0;

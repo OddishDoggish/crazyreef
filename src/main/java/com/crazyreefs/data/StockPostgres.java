@@ -1,34 +1,31 @@
 package com.crazyreefs.data;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.crazyreefs.beans.Stock;
 import com.crazyreefs.beans.User;
 import com.crazyreefs.util.ConnectionUtil;
 
-public class UserPostgres implements UserDAO {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.HashSet;
+import java.util.Set;
+
+public class StockPostgres implements StockDAO {
 
 	private ConnectionUtil cu = ConnectionUtil.getConnectionUtil();
 
 	@Override
-	public int createUser(User u) {
+	public int createNewStockItem(Stock s) {
 		Integer id = 0;
 		
 		try (Connection conn = cu.getConnection()) {
 			conn.setAutoCommit(false);
-			String sql = "INSERT INTO admin_user VALUES "
+			String sql = "INSERT INTO inventory VALUES "
 					+ "(default, ?, ?, ?, ?, ?)";
 			String[] keys = {"id"};
 			PreparedStatement pstmt = conn.prepareStatement(sql, keys);
-			pstmt.setString(1, u.getUsername());
-			pstmt.setString(2, u.getPassword());
-			pstmt.setString(3, u.getFirstname());
-			pstmt.setString(4, u.getLastname());
-			pstmt.setString(5, u.getEmail());
+			pstmt.setString(1, s.getName());
+
 			
 			pstmt.executeUpdate();
 			ResultSet rs = pstmt.getGeneratedKeys();
@@ -43,34 +40,30 @@ public class UserPostgres implements UserDAO {
 			e.printStackTrace();
 		}
 		
-		u.setUserId(id);
+		s.setStockId(id);
 		return id;
 	}
 
 	@Override
-	public Set<User> findUsers() {
+	public Set<Stock> findItems() {
 		
-		HashSet<User> users = null;
+		HashSet<Stock> stocks = null;
 		
 		try (Connection conn = cu.getConnection()) {
 			conn.setAutoCommit(false);
-			String sql = "SELECT * FROM admin_user";
+			String sql = "SELECT * FROM inventory";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			
 			ResultSet rs = pstmt.executeQuery();
 			
-			users = new HashSet<>();
+			stocks = new HashSet<>();
 			
 			while(rs.next()) {
-				User u = new User();
-				u.setUserId(rs.getInt("id"));
-				u.setUsername(rs.getString("username"));
-				u.setPassword(rs.getString("passwd"));
-				u.setFirstname(rs.getString("first_name"));
-				u.setLastname(rs.getString("last_name"));
-				u.setEmail(rs.getString("email"));
-				
-				users.add(u);
+				Stock s = new Stock();
+				s.setStockId(rs.getInt("id"));
+				s.setName(rs.getString("name"));
+
+				stocks.add(s);
 				
 			}
 			
@@ -78,82 +71,72 @@ public class UserPostgres implements UserDAO {
 				e.printStackTrace();
 				}
 		
-		return users;
+		return stocks;
 	}
 
 	@Override
-	public User findUserByUsername(String username) {
-		User u = null;
+	public Stock findStockByName(String name) {
+		Stock s = null;
 		
 		try (Connection conn = cu.getConnection()) {
 			conn.setAutoCommit(false);
-			String sql = "SELECT * FROM admin_user " +
-					"WHERE username = ?";
+			String sql = "SELECT * FROM inventory " +
+					"WHERE name = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,username);
+			pstmt.setString(1,name);
 			
 			ResultSet rs = pstmt.executeQuery();
 			
 			if (rs.next()) {
-				u = new User();
-				u.setUserId(rs.getInt("id"));
-				u.setUsername(rs.getString("username"));
-				u.setPassword(rs.getString("passwd"));
-				u.setFirstname(rs.getString("first_name"));
-				u.setLastname(rs.getString("last_name"));
-				u.setEmail(rs.getString("email"));
+				s.setStockId(rs.getInt("id"));
+				s.setName(rs.getString("name"));
+
 			}
 			
 		} catch (Exception e) {
 				e.printStackTrace();
 				}
 		
-		return u;
+		return s;
 	}
 	
 	@Override
-	public User findUserByUserId(int userId) {
-		User u = null;
+	public Stock findItemByStockId(int stockId) {
+		Stock s = null;
 		
 		try (Connection conn = cu.getConnection()) {
 			conn.setAutoCommit(false);
-			String sql = "SELECT * FROM admin_user " +
+			String sql = "SELECT * FROM inventory " +
 					"WHERE id = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1,userId);
+			pstmt.setInt(1,stockId);
 			
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				u = new User();
-				u.setUserId(rs.getInt("user_id"));
-				u.setUsername(rs.getString("username"));
-				u.setPassword(rs.getString("passwd"));
-				u.setFirstname(rs.getString("first_name"));
-				u.setLastname(rs.getString("last_name"));
-				u.setEmail(rs.getString("email"));
+				s = new Stock();
+				s.setStockId(rs.getInt("id"));
+				s.setName(rs.getString("name"));
 			}
 			
 		} catch (Exception e) {
 				e.printStackTrace();
 				}
 		
-		return u;
+		return s;
 	}
 
 	@Override
-	public void updateUser(User u) {
+	public void updateStockItem(Stock s) {
 		try (Connection conn = cu.getConnection()) {
 			conn.setAutoCommit(false);
-			String sql = "UPDATE admin_user SET " +
+			String sql = "UPDATE inventory SET username = ?, passwd = ?, " +
 					"first_name = ?, last_name = ?, email = ? " +
 					"WHERE user_id = ?";
 			
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, u.getFirstname());
-			pstmt.setString(2, u.getLastname());
-			pstmt.setString(3, u.getEmail());
-			pstmt.setInt(4, u.getUserId());
+			pstmt.setString(1, s.getName());
+
 			
 			int rowsAffected = pstmt.executeUpdate();
 			if (rowsAffected > 0) {
@@ -167,14 +150,14 @@ public class UserPostgres implements UserDAO {
 	}
 
 	@Override
-	public void deleteUser(User u) {
+	public void deleteStockItem(Stock s) {
 		try (Connection conn = cu.getConnection()) {
 			conn.setAutoCommit(false);
-			String sql = "DELETE FROM admin_user " +
-					"WHERE user_id = ?";
+			String sql = "DELETE FROM inventory " +
+					"WHERE id = ?";
 				
 			PreparedStatement pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, u.getUserId());
+			pstmt.setInt(1, s.getStockId());
 			
 			int rowsAffected = pstmt.executeUpdate();
 			if (rowsAffected > 0) {

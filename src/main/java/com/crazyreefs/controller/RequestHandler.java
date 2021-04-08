@@ -16,7 +16,7 @@ import com.crazyreefs.delegates.StockDelegate;
 
 public class RequestHandler {
 
-private Map<String, FrontControllerDelegate> delegateMap;
+	private Map<String, FrontControllerDelegate> delegateMap;
 	
 	{
 		delegateMap = new HashMap<String, FrontControllerDelegate>();
