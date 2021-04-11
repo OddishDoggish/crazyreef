@@ -1,15 +1,15 @@
 package com.crazyreefs.services;
 
-import java.util.Set;
-
 import com.crazyreefs.beans.User;
 import com.crazyreefs.data.UserDAO;
 import com.crazyreefs.util.BCrypt;
 
+import java.util.Set;
+
 public class UserService {
 
 	private UserDAO userDAO;
-	
+
 	public UserService(UserDAO ud) {
 		userDAO = ud; 
 	}
@@ -22,10 +22,12 @@ public class UserService {
 	// Read
 	public User loginUser(String username, String password) {
 		User u = userDAO.findUserByUsername(username);
-		if (u != null && (BCrypt.checkpw(password, u.getPassword())))
+		System.out.println("The password is: " + u.getPassword());
+		System.out.println("The hashed password is: " + BCrypt.hashpw(u.getPassword(),BCrypt.gensalt()));
+		if (u != null && (BCrypt.checkpw(u.getPassword(),password)))
 			return u;
 		else
-			return null;
+		return null;
 	}
 
 	public User getUserByUsername(String username) {

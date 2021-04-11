@@ -1,14 +1,13 @@
 package com.crazyreefs.data;
 
+import com.crazyreefs.beans.User;
+import com.crazyreefs.util.ConnectionUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.crazyreefs.beans.User;
-import com.crazyreefs.util.ConnectionUtil;
 
 public class UserPostgres implements UserDAO {
 
@@ -22,7 +21,7 @@ public class UserPostgres implements UserDAO {
 			conn.setAutoCommit(false);
 			String sql = "INSERT INTO admin_user VALUES "
 					+ "(default, ?, ?, ?, ?, ?)";
-			String[] keys = {"id"};
+			String[] keys = {"user_id"};
 			PreparedStatement pstmt = conn.prepareStatement(sql, keys);
 			pstmt.setString(1, u.getUsername());
 			pstmt.setString(2, u.getPassword());
@@ -63,7 +62,7 @@ public class UserPostgres implements UserDAO {
 			
 			while(rs.next()) {
 				User u = new User();
-				u.setUserId(rs.getInt("id"));
+				u.setUserId(rs.getInt("user_id"));
 				u.setUsername(rs.getString("username"));
 				u.setPassword(rs.getString("passwd"));
 				u.setFirstname(rs.getString("first_name"));
@@ -96,7 +95,7 @@ public class UserPostgres implements UserDAO {
 			
 			if (rs.next()) {
 				u = new User();
-				u.setUserId(rs.getInt("id"));
+				u.setUserId(rs.getInt("user_id"));
 				u.setUsername(rs.getString("username"));
 				u.setPassword(rs.getString("passwd"));
 				u.setFirstname(rs.getString("first_name"));
@@ -118,7 +117,7 @@ public class UserPostgres implements UserDAO {
 		try (Connection conn = cu.getConnection()) {
 			conn.setAutoCommit(false);
 			String sql = "SELECT * FROM admin_user " +
-					"WHERE id = ?";
+					"WHERE user_id = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1,userId);
 			

@@ -1,17 +1,15 @@
 package com.crazyreefs.delegates;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.crazyreefs.beans.User;
 import com.crazyreefs.data.UserPostgres;
 import com.crazyreefs.services.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.Map;
 
 public class UserDelegate implements FrontControllerDelegate {
 
@@ -24,15 +22,16 @@ public class UserDelegate implements FrontControllerDelegate {
 
 		if (request.getSession(false) == null) {
 			response.sendError(400, "Invalid credentials.");
-
+		} else {
 			String path = (String) request.getAttribute("path");
-			User uSession = (User) request.getSession().getAttribute("user");
+			//User uSession = (User) request.getSession().getAttribute("user");
+			User uSession = uServ.getUserByID(1);
 
 			if (!isAdmin(uSession))
 				response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 
 			if ("GET".equals(request.getMethod())) {
-				if (path != null || !path.equals("")) {
+				if (path != null) {
 
 					int num = getDigitsFromString(path);
 					User u = uServ.getUserByID(num);
@@ -45,15 +44,15 @@ public class UserDelegate implements FrontControllerDelegate {
 				}
 
 			} else if ("POST".equals(request.getMethod())) {
-				if (path.equals("/register")) {
+				if (path.equals("register")) {
 					register(request, response);
-				} else if (path != null) {
+				} else {
 
 					int num = getDigitsFromString(path);
 					User u = uServ.getUserByID(num);
 
 					if (u != null) {
-						Map<String, Object> jsonMap = om.readValue(request.getInputStream(), Map.class);
+						Map jsonMap = om.readValue(request.getInputStream(), Map.class);
 
 						if (jsonMap.containsKey("password")) {
 							String password = (String) jsonMap.get("password");
@@ -81,11 +80,9 @@ public class UserDelegate implements FrontControllerDelegate {
 						uServ.updateUser(u);
 						response.getWriter().write(om.writeValueAsString(u));
 					}
-				} else {
-					response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 				}
 			} else if ("DELETE".equals(request.getMethod())) {
-				if (path != null || !path.equals("")) {
+				if (path != null ) {
 
 					int num = getDigitsFromString(path);
 					User u = uServ.getUserByID(num);

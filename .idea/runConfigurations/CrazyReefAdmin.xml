@@ -1,0 +1,24 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CrazyReefAdmin" type="com.poratu.idea.plugins.tomcat" factoryName="SMART_TOMCAT_FACTORY" show_console_on_std_err="true" show_console_on_std_out="true">
+    <option name="adminPort" value="8005" />
+    <option name="contextPath" value="" />
+    <option name="docBase" value="C:\Users\Elaina\IdeaProjects\crazyreef\src\main\webapp" />
+    <option name="envOptions">
+      <map />
+    </option>
+    <option name="passParentEnvironmentVariables" value="true" />
+    <option name="port" value="8888" />
+    <option name="tomcatInfo">
+      <TomcatInfo>
+        <option name="name" value="Apache Tomcat/10.0.5" />
+        <option name="number" value="0" />
+        <option name="path" value="F:\Programs\apache-tomcat-10.0.5" />
+        <option name="version" value="10.0.5.0" />
+      </TomcatInfo>
+    </option>
+    <option name="vmOptions" value="" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

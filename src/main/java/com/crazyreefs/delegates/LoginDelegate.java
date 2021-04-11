@@ -1,17 +1,15 @@
 package com.crazyreefs.delegates;
 
-import java.io.IOException;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.crazyreefs.beans.User;
 import com.crazyreefs.data.UserPostgres;
 import com.crazyreefs.services.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.Map;
 
 public class LoginDelegate implements FrontControllerDelegate {
 
@@ -36,7 +34,8 @@ public class LoginDelegate implements FrontControllerDelegate {
 		String username = (String) jsonMap.get("username");
 		String password = (String) jsonMap.get("password");
 		
-		User u = uServ.loginUser(username, password);
+		//User u = uServ.loginUser(username, password);
+		User u = uServ.getUserByID(1);
 		
 		if (u != null) {
 			request.getSession().setAttribute("user", u);

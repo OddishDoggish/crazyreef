@@ -1,13 +1,12 @@
 package com.crazyreefs.controller;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.crazyreefs.delegates.FrontControllerDelegate;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 
 public class FrontController extends HttpServlet {
 	/**
@@ -16,14 +15,17 @@ public class FrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private RequestHandler rh = new RequestHandler();
        
-	private void process(HttpServletRequest request, HttpServletResponse response) 
+	private void process(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		FrontControllerDelegate fcd = rh.handle(request, response);
-		
+
+		System.out.println("Is this doing anything?");
+
 		if (fcd != null)
 			fcd.process(request, response);
 		else
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			response.sendError(411, "You're wrong.");
 	}
 
 	@Override

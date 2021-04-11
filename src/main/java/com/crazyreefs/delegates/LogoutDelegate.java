@@ -1,13 +1,11 @@
 package com.crazyreefs.delegates;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.crazyreefs.beans.User;
-import com.crazyreefs.delegates.FrontControllerDelegate;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 public class LogoutDelegate implements FrontControllerDelegate {
 
